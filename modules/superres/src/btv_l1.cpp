@@ -58,10 +58,10 @@ namespace
                                  OutputArrayOfArrays _relForwardMotions, OutputArrayOfArrays _relBackwardMotions,
                                  int baseIdx, const Size & size)
     {
-        std::vector<UMat> & forwardMotions = *(std::vector<UMat> *)_forwardMotions.getObj(),
-                & backwardMotions = *(std::vector<UMat> *)_backwardMotions.getObj(),
-                & relForwardMotions = *(std::vector<UMat> *)_relForwardMotions.getObj(),
-                & relBackwardMotions = *(std::vector<UMat> *)_relBackwardMotions.getObj();
+        std::vector<UMat> & forwardMotions = *_forwardMotions.getObj<std::vector<UMat>>(),
+                & backwardMotions = *_backwardMotions.getObj<std::vector<UMat>>(),
+                & relForwardMotions = *_relForwardMotions.getObj<std::vector<UMat>>(),
+                & relBackwardMotions = *_relBackwardMotions.getObj<std::vector<UMat>>();
 
         const int count = static_cast<int>(forwardMotions.size());
 
@@ -99,10 +99,10 @@ namespace
                    ocl_calcRelativeMotions(_forwardMotions, _backwardMotions, _relForwardMotions,
                                            _relBackwardMotions, baseIdx, size))
 
-        std::vector<Mat> & forwardMotions = *(std::vector<Mat> *)_forwardMotions.getObj(),
-                & backwardMotions = *(std::vector<Mat> *)_backwardMotions.getObj(),
-                & relForwardMotions = *(std::vector<Mat> *)_relForwardMotions.getObj(),
-                & relBackwardMotions = *(std::vector<Mat> *)_relBackwardMotions.getObj();
+        std::vector<Mat> & forwardMotions = *_forwardMotions.getObj<std::vector<Mat>>(),
+                & backwardMotions = *_backwardMotions.getObj<std::vector<Mat>>(),
+                & relForwardMotions = *_relForwardMotions.getObj<std::vector<Mat>>(),
+                & relBackwardMotions = *_relBackwardMotions.getObj<std::vector<Mat>>();
 
         const int count = static_cast<int>(forwardMotions.size());
 
@@ -130,8 +130,8 @@ namespace
 
     bool ocl_upscaleMotions(InputArrayOfArrays _lowResMotions, OutputArrayOfArrays _highResMotions, int scale)
     {
-        std::vector<UMat> & lowResMotions = *(std::vector<UMat> *)_lowResMotions.getObj(),
-                & highResMotions = *(std::vector<UMat> *)_highResMotions.getObj();
+        std::vector<UMat> & lowResMotions = *_lowResMotions.getObj<std::vector<UMat>>(),
+                & highResMotions = *_highResMotions.getObj<std::vector<UMat>>();
 
         highResMotions.resize(lowResMotions.size());
 
@@ -151,8 +151,8 @@ namespace
         CV_OCL_RUN(_lowResMotions.isUMatVector() && _highResMotions.isUMatVector(),
                    ocl_upscaleMotions(_lowResMotions, _highResMotions, scale))
 
-        std::vector<Mat> & lowResMotions = *(std::vector<Mat> *)_lowResMotions.getObj(),
-                & highResMotions = *(std::vector<Mat> *)_highResMotions.getObj();
+        std::vector<Mat> & lowResMotions = *_lowResMotions.getObj<std::vector<Mat>>(),
+                & highResMotions = *_highResMotions.getObj<std::vector<Mat>>();
 
         highResMotions.resize(lowResMotions.size());
 
@@ -579,9 +579,9 @@ namespace
     bool BTVL1_Base::ocl_process(InputArrayOfArrays _src, OutputArray _dst, InputArrayOfArrays _forwardMotions,
                                  InputArrayOfArrays _backwardMotions, int baseIdx)
     {
-        std::vector<UMat> & src = *(std::vector<UMat> *)_src.getObj(),
-                & forwardMotions = *(std::vector<UMat> *)_forwardMotions.getObj(),
-                & backwardMotions = *(std::vector<UMat> *)_backwardMotions.getObj();
+        std::vector<UMat> & src = *_src.getObj<std::vector<UMat>>(),
+                & forwardMotions = *_forwardMotions.getObj<std::vector<UMat>>(),
+                & backwardMotions = *_backwardMotions.getObj<std::vector<UMat>>();
 
         // update blur filter and btv weights
         if (blurKernelSize_ != curBlurKernelSize_ || blurSigma_ != curBlurSigma_ || src[0].type() != curSrcType_)
@@ -684,9 +684,9 @@ namespace
                    _backwardMotions.isUMatVector(),
                    ocl_process(_src, _dst, _forwardMotions, _backwardMotions, baseIdx))
 
-        std::vector<Mat> & src = *(std::vector<Mat> *)_src.getObj(),
-                & forwardMotions = *(std::vector<Mat> *)_forwardMotions.getObj(),
-                & backwardMotions = *(std::vector<Mat> *)_backwardMotions.getObj();
+        std::vector<Mat> & src = *_src.getObj<std::vector<Mat>>(),
+                & forwardMotions = *_forwardMotions.getObj<std::vector<Mat>>(),
+                & backwardMotions = *_backwardMotions.getObj<std::vector<Mat>>();
 
         // update blur filter and btv weights
         if (blurKernelSize_ != curBlurKernelSize_ || blurSigma_ != curBlurSigma_ || src[0].type() != curSrcType_)

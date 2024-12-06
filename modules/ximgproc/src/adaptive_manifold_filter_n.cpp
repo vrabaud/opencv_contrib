@@ -323,7 +323,7 @@ void AdaptiveManifoldFilterN::initSrcAndJoint(InputArray src_, InputArray joint_
             srcCn[i].convertTo(srcCn[i], CV_32F);
     }
 
-    if (joint_.empty() || joint_.getObj() == src_.getObj())
+    if (joint_.empty() || joint_.pointsTo(src_))
     {
         jointCnNum = srcCnNum;
 

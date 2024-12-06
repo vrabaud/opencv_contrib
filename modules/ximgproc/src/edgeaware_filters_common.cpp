@@ -81,7 +81,7 @@ int getTotalNumberOfChannels(InputArrayOfArrays src)
     else if (src.isMatVector())
     {
         int cnNum = 0;
-        const vector<Mat>& srcv = *static_cast<const vector<Mat>*>(src.getObj());
+        const vector<Mat>& srcv = *src.getObj<vector<Mat>>();
         for (unsigned i = 0; i < srcv.size(); i++)
             cnNum += srcv[i].channels();
         return cnNum;
@@ -89,7 +89,7 @@ int getTotalNumberOfChannels(InputArrayOfArrays src)
     else if (src.isUMatVector())
     {
         int cnNum = 0;
-        const vector<UMat>& srcv = *static_cast<const vector<UMat>*>(src.getObj());
+        const vector<UMat>& srcv = *src.getObj<vector<UMat>>();
         for (unsigned i = 0; i < srcv.size(); i++)
             cnNum += srcv[i].channels();
         return cnNum;
@@ -112,7 +112,7 @@ void checkSameSizeAndDepth(InputArrayOfArrays src, Size &sz, int &depth)
     }
     else if (src.isMatVector())
     {
-        const vector<Mat>& srcv = *static_cast<const vector<Mat>*>(src.getObj());
+        const vector<Mat>& srcv = *src.getObj<vector<Mat>>();
         CV_Assert(srcv.size() > 0);
         for (unsigned i = 0; i < srcv.size(); i++)
         {
@@ -124,7 +124,7 @@ void checkSameSizeAndDepth(InputArrayOfArrays src, Size &sz, int &depth)
     }
     else if (src.isUMatVector())
     {
-        const vector<UMat>& srcv = *static_cast<const vector<UMat>*>(src.getObj());
+        const vector<UMat>& srcv = *src.getObj<vector<UMat>>();
         CV_Assert(srcv.size() > 0);
         for (unsigned i = 0; i < srcv.size(); i++)
         {

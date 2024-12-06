@@ -48,7 +48,7 @@ namespace opencv_test { namespace {
 CascadeClassifier cascade_detector;
 static bool myCustomDetector( InputArray image, OutputArray ROIs, void * config = 0 ){
     Mat gray;
-    std::vector<Rect> & faces = *(std::vector<Rect>*) ROIs.getObj();
+    std::vector<Rect> & faces = *ROIs.getObj<std::vector<Rect>>();
     faces.clear();
 
     if(config!=0){

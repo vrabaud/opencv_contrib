@@ -159,7 +159,7 @@ SinusoidalPatternProfilometry_Impl::Marker::Marker( Point c )
 // Draw marker on a pattern
 void SinusoidalPatternProfilometry_Impl::Marker::drawMarker( OutputArray pattern )
 {
-    Mat &pattern_ = *(Mat*) pattern.getObj();
+    Mat &pattern_ = *pattern.getObj<Mat>();
 
     pattern_.at<uchar>(center.x, center.y) = 255;
     pattern_.at<uchar>(up.x, up.y) = 255;
@@ -190,7 +190,7 @@ bool SinusoidalPatternProfilometry_Impl::generate( OutputArrayOfArrays pattern )
     int firstMarkerOffset = 10;
     int mnRatio;
     int nbrOfMarkersOnOneRow;
-    std::vector<Mat> &pattern_ = *(std::vector<Mat>*) pattern.getObj();
+    std::vector<Mat> &pattern_ = *pattern.getObj<std::vector<Mat>>();
 
     n = params.nbrOfPeriods / nbrOfPatterns;
     mnRatio = m / n;
@@ -276,8 +276,8 @@ void SinusoidalPatternProfilometry_Impl::computePhaseMap( InputArrayOfArrays pat
                                                           OutputArray shadowMask,
                                                           InputArray fundamental  )
 {
-    std::vector<Mat> &pattern_ = *(std::vector<Mat>*) patternImages.getObj();
-    Mat &wrappedPhaseMap_ = *(Mat*) wrappedPhaseMap.getObj();
+    std::vector<Mat> &pattern_ = *patternImages.getObj<std::vector<Mat>>();
+    Mat &wrappedPhaseMap_ = *wrappedPhaseMap.getObj<Mat>();
     int rows = pattern_[0].rows;
     int cols = pattern_[0].cols;
     int dcWidth = 5;
@@ -287,7 +287,7 @@ void SinusoidalPatternProfilometry_Impl::computePhaseMap( InputArrayOfArrays pat
     // Compute wrapped phase map for FTP
     if( params.methodId == FTP )
     {
-        Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+        Mat &shadowMask_ = *shadowMask.getObj<Mat>();
         Mat dftImage, complexInverseDft;
         Mat dftMag;
         int halfWidth = cols/2;
@@ -308,8 +308,8 @@ void SinusoidalPatternProfilometry_Impl::computePhaseMap( InputArrayOfArrays pat
     // Compute wrapped pahse map for PSP
     else if( params.methodId == PSP )
     {
-        Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
-        //Mat &fundamental_ = *(Mat*) fundamental.getObj();
+        Mat &shadowMask_ = *shadowMask.getObj<Mat>();
+        //Mat &fundamental_ = *fundamental.getObj<Mat>();
         CV_UNUSED(fundamental);
         Mat dmt;
         int nbrOfPatterns = static_cast<int>(pattern_.size());
@@ -339,7 +339,7 @@ void SinusoidalPatternProfilometry_Impl::computePhaseMap( InputArrayOfArrays pat
     }
     else if( params.methodId == FAPS )
     {
-        Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+        Mat &shadowMask_ = *shadowMask.getObj<Mat>();
         int nbrOfPatterns = static_cast<int>(pattern_.size());
         std::vector<Mat> unwrappedFTPhaseMaps;
         std::vector<Mat> filteredPatterns(nbrOfPatterns);
@@ -400,8 +400,8 @@ void SinusoidalPatternProfilometry_Impl::unwrapPhaseMap( InputArray wrappedPhase
     unwrappingParams.width = camSize.width;
     unwrappingParams.height = camSize.height;
 
-    Mat &wPhaseMap = *(Mat*) wrappedPhaseMap.getObj();
-    Mat &uPhaseMap = *(Mat*) unwrappedPhaseMap.getObj();
+    Mat &wPhaseMap = *wrappedPhaseMap.getObj<Mat>();
+    Mat &uPhaseMap = *unwrappedPhaseMap.getObj<Mat>();
     Mat mask;
 
     if( shadowMask.empty() )
@@ -411,7 +411,7 @@ void SinusoidalPatternProfilometry_Impl::unwrapPhaseMap( InputArray wrappedPhase
     }
     else
     {
-        Mat &temp = *(Mat*) shadowMask.getObj();
+        Mat &temp = *shadowMask.getObj<Mat>();
         temp.copyTo(mask);
     }
 
@@ -433,8 +433,8 @@ void SinusoidalPatternProfilometry_Impl::findProCamMatches( InputArray projUnwra
 void SinusoidalPatternProfilometry_Impl::computeDft( InputArray patternImage,
                                                      OutputArray FourierTransform )
 {
-    Mat &pattern_ = *(Mat*) patternImage.getObj();
-    Mat &FourierTransform_ = *(Mat*) FourierTransform.getObj();
+    Mat &pattern_ = *patternImage.getObj<Mat>();
+    Mat &FourierTransform_ = *FourierTransform.getObj<Mat>();
     Mat padded;
     int m = getOptimalDFTSize(pattern_.rows);
     int n = getOptimalDFTSize(pattern_.cols);
@@ -449,8 +449,8 @@ void SinusoidalPatternProfilometry_Impl::computeInverseDft( InputArray FourierTr
                                                            OutputArray inverseFourierTransform,
                                                            bool realOutput )
 {
-    Mat &FourierTransform_ = *(Mat*) FourierTransform.getObj();
-    Mat &inverseFourierTransform_ = *(Mat*) inverseFourierTransform.getObj();
+    Mat &FourierTransform_ = *FourierTransform.getObj<Mat>();
+    Mat &inverseFourierTransform_ = *inverseFourierTransform.getObj<Mat>();
     if( realOutput )
         idft(FourierTransform_, inverseFourierTransform_, DFT_SCALE | DFT_REAL_OUTPUT);
     else
@@ -460,8 +460,8 @@ void SinusoidalPatternProfilometry_Impl::computeInverseDft( InputArray FourierTr
 void SinusoidalPatternProfilometry_Impl::computeDftMagnitude( InputArray FourierTransform,
                                                               OutputArray FourierTransformMagnitude )
 {
-    Mat &FourierTransform_ = *(Mat*) FourierTransform.getObj();
-    Mat &FourierTransformMagnitude_ = *(Mat*) FourierTransformMagnitude.getObj();
+    Mat &FourierTransform_ = *FourierTransform.getObj<Mat>();
+    Mat &FourierTransformMagnitude_ = *FourierTransformMagnitude.getObj<Mat>();
     Mat planes[2];
     split(FourierTransform_, planes);
     magnitude(planes[0], planes[1], planes[0]);
@@ -478,9 +478,9 @@ void SinusoidalPatternProfilometry_Impl::computeFtPhaseMap( InputArray inverseFo
                                                             OutputArray wrappedPhaseMap )
 {
 
-    Mat &inverseFourierTransform_ = *(Mat*) inverseFourierTransform.getObj();
-    Mat &wrappedPhaseMap_ = *(Mat*) wrappedPhaseMap.getObj();
-    Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+    Mat &inverseFourierTransform_ = *inverseFourierTransform.getObj<Mat>();
+    Mat &wrappedPhaseMap_ = *wrappedPhaseMap.getObj<Mat>();
+    Mat &shadowMask_ = *shadowMask.getObj<Mat>();
     Mat planes[2];
 
     int rows = inverseFourierTransform_.rows;
@@ -511,7 +511,7 @@ void SinusoidalPatternProfilometry_Impl::computeFtPhaseMap( InputArray inverseFo
 void SinusoidalPatternProfilometry_Impl::swapQuadrants( InputOutputArray image,
                                                        int centerX, int centerY )
 {
-    Mat &image_ = *(Mat*) image.getObj();
+    Mat &image_ = *image.getObj<Mat>();
     Mat q0(image_, Rect(0, 0, centerX, centerY));
     Mat q1(image_, Rect(centerX, 0, centerX, centerY));
     Mat q2(image_, Rect(0, centerY, centerX, centerY));
@@ -533,7 +533,7 @@ void SinusoidalPatternProfilometry_Impl::frequencyFiltering( InputOutputArray Fo
                                                              bool keepInsideRegion, int centerX2,
                                                              int centerY2 )
 {
-    Mat &FourierTransform_ = *(Mat*) FourierTransform.getObj();
+    Mat &FourierTransform_ = *FourierTransform.getObj<Mat>();
     int rows = FourierTransform_.rows;
     int cols = FourierTransform_.cols;
     int type = FourierTransform_.type();
@@ -584,7 +584,7 @@ bool SinusoidalPatternProfilometry_Impl::findMaxInHalvesTransform( InputArray Fo
                                                                    Point &maxPosition1,
                                                                    Point &maxPosition2 )
 {
-    Mat &FourierTransformMag_ = *(Mat*) FourierTransformMag.getObj();
+    Mat &FourierTransformMag_ = *FourierTransformMag.getObj<Mat>();
 
     int centerX = FourierTransformMag_.cols / 2;
     int centerY = FourierTransformMag_.rows / 2;
@@ -630,9 +630,9 @@ void SinusoidalPatternProfilometry_Impl::computePsPhaseMap( InputArrayOfArrays p
                                                             InputArray shadowMask,
                                                             OutputArray wrappedPhaseMap )
 {
-    std::vector<Mat> &pattern_ = *(std::vector<Mat>*) patternImages.getObj();
-    Mat &wrappedPhaseMap_ = *(Mat*) wrappedPhaseMap.getObj();
-    Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+    std::vector<Mat> &pattern_ = *patternImages.getObj<std::vector<Mat>>();
+    Mat &wrappedPhaseMap_ = *wrappedPhaseMap.getObj<Mat>();
+    Mat &shadowMask_ = *shadowMask.getObj<Mat>();
 
     int rows = pattern_[0].rows;
     int cols = pattern_[0].cols;
@@ -681,12 +681,12 @@ void SinusoidalPatternProfilometry_Impl::computeFapsPhaseMap( InputArray a,
                                                               InputArray shadowMask,
                                                               OutputArray wrappedPhaseMap )
 {
-    Mat &a_ = *(Mat*) a.getObj();
-    Mat &b_ = *(Mat*) b.getObj();
-    Mat &theta1_ = *(Mat*) theta1.getObj();
-    Mat &theta2_ = *(Mat*) theta2.getObj();
-    Mat &wrappedPhaseMap_ = *(Mat*) wrappedPhaseMap.getObj();
-    Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+    Mat &a_ = *a.getObj<Mat>();
+    Mat &b_ = *b.getObj<Mat>();
+    Mat &theta1_ = *theta1.getObj<Mat>();
+    Mat &theta2_ = *theta2.getObj<Mat>();
+    Mat &wrappedPhaseMap_ = *wrappedPhaseMap.getObj<Mat>();
+    Mat &shadowMask_ = *shadowMask.getObj<Mat>();
 
     int rows = a_.rows;
     int cols = a_.cols;
@@ -720,8 +720,8 @@ void SinusoidalPatternProfilometry_Impl::computeFapsPhaseMap( InputArray a,
 void SinusoidalPatternProfilometry_Impl::computeShadowMask( InputArrayOfArrays patternImages,
                                                             OutputArray shadowMask )
 {
-    std::vector<Mat> &patternImages_ = *(std::vector<Mat>*) patternImages.getObj();
-    Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+    std::vector<Mat> &patternImages_ = *patternImages.getObj<std::vector<Mat>>();
+    Mat &shadowMask_ = *shadowMask.getObj<Mat>();
     Mat mean;
     int rows = patternImages_[0].rows;
     int cols = patternImages_[0].cols;
@@ -748,9 +748,9 @@ void SinusoidalPatternProfilometry_Impl::computeDataModulationTerm( InputArrayOf
                                                                     OutputArray dataModulationTerm,
                                                                     InputArray shadowMask )
 {
-    std::vector<Mat> &patternImages_ = *(std::vector<Mat>*) patternImages.getObj();
-    Mat &dataModulationTerm_ = *(Mat*) dataModulationTerm.getObj();
-    Mat &shadowMask_ = *(Mat*) shadowMask.getObj();
+    std::vector<Mat> &patternImages_ = *patternImages.getObj<std::vector<Mat>>();
+    Mat &dataModulationTerm_ = *dataModulationTerm.getObj<Mat>();
+    Mat &shadowMask_ = *shadowMask.getObj<Mat>();
     int rows = patternImages_[0].rows;
     int cols = patternImages_[0].cols;
     float num = 0;
@@ -859,7 +859,7 @@ void SinusoidalPatternProfilometry_Impl::computeDataModulationTerm( InputArrayOf
 void SinusoidalPatternProfilometry_Impl::extractMarkersLocation( InputArray dataModulationTerm,
                                                                  std::vector<Point> &markersLocation )
 {
-    Mat &dmt = *(Mat*) dataModulationTerm.getObj();
+    Mat &dmt = *dataModulationTerm.getObj<Mat>();
     int rows = dmt.rows;
     int cols = dmt.cols;
     int halfRegionSize = 6;
@@ -895,11 +895,11 @@ void SinusoidalPatternProfilometry_Impl::convertToAbsolutePhaseMap( InputArrayOf
                                                                     InputArray shadowMask,
                                                                     InputArray fundamentalMatrix )
 {
-    std::vector<Mat> &camPatterns_ = *(std::vector<Mat>*) camPatterns.getObj();
+    std::vector<Mat> &camPatterns_ = *camPatterns.getObj<std::vector<Mat>>();
     CV_UNUSED(unwrappedCamPhaseMap);
     CV_UNUSED(unwrappedProjPhaseMap);
 
-    Mat &fundamental = *(Mat*) fundamentalMatrix.getObj();
+    Mat &fundamental = *fundamentalMatrix.getObj<Mat>();
 
     Mat camDmt;
 

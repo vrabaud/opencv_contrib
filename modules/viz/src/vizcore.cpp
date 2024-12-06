@@ -295,7 +295,7 @@ void cv::viz::writeTrajectory(InputArray _traj, const String& files_format, int 
 #if CV_MAJOR_VERSION < 3
         std::vector<Mat>& v = *(std::vector<Mat>*)_traj.obj;
 #else
-        std::vector<Mat>& v = *(std::vector<Mat>*)_traj.getObj();
+        std::vector<Mat>& v = *_traj.getObj<std::vector<Mat>>();
 #endif
 
         for(size_t i = 0, index = max(0, start); i < v.size(); ++i, ++index)

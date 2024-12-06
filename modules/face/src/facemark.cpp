@@ -89,7 +89,7 @@ bool loadTrainingData(String filename, std::vector<String> & images, OutputArray
 
     // FIXIT
     std::vector<std::vector<Point2f> > & facePoints =
-        *(std::vector<std::vector<Point2f> >*) _facePoints.getObj();
+        *_facePoints.getObj<std::vector<std::vector<Point2f>>>();
 
     std::ifstream infile;
     infile.open(filename.c_str(), std::ios::in);
@@ -132,7 +132,7 @@ bool loadTrainingData(String imageList, String groundTruth, std::vector<String> 
 
     // FIXIT
     std::vector<std::vector<Point2f> > & facePoints =
-            *(std::vector<std::vector<Point2f> >*) _facePoints.getObj();
+            *_facePoints.getObj<std::vector<std::vector<Point2f>>>();
 
     /*clear the output containers*/
     images.clear();

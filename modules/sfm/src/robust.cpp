@@ -102,7 +102,7 @@ fundamentalFromCorrespondences8PointRobust( InputArray _x1,
   _F.create(3, 3, depth);
 
   Mat F = _F.getMat();
-  std::vector<int>& inliers = *(std::vector<int>*)_inliers.getObj();
+  std::vector<int>& inliers = *_inliers.getObj<std::vector<int>>();
 
   double solution_error = 0.0;
 
@@ -170,7 +170,7 @@ fundamentalFromCorrespondences7PointRobust( InputArray _x1,
   _F.create(3, 3, depth);
 
   Mat F = _F.getMat();
-  std::vector<int>& inliers = *(std::vector<int>*)_inliers.getObj();
+  std::vector<int>& inliers = *_inliers.getObj<std::vector<int>>();
 
   double solution_error = 0.0;
 

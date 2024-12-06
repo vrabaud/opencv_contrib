@@ -387,7 +387,7 @@ void HistogramPhaseUnwrapping_Impl::unwrapPhaseMap( InputArray wrappedPhaseMap,
                                                     OutputArray unwrappedPhaseMap,
                                                     InputArray shadowMask )
 {
-    Mat &wPhaseMap = *(Mat*) wrappedPhaseMap.getObj();
+    Mat &wPhaseMap = *wrappedPhaseMap.getObj<Mat>();
     Mat mask;
     int rows = params.height;
     int cols = params.width;
@@ -398,7 +398,7 @@ void HistogramPhaseUnwrapping_Impl::unwrapPhaseMap( InputArray wrappedPhaseMap,
     }
     else
     {
-        Mat &temp = *(Mat*) shadowMask.getObj();
+        Mat &temp = *shadowMask.getObj<Mat>();
         temp.copyTo(mask);
     }
 
@@ -420,8 +420,8 @@ void HistogramPhaseUnwrapping_Impl::computePixelsReliability( InputArray wrapped
     int rows = params.height;
     int cols = params.width;
 
-    Mat &wPhaseMap = *(Mat*) wrappedPhaseMap.getObj();
-    Mat &mask = *(Mat*) shadowMask.getObj();
+    Mat &wPhaseMap = *wrappedPhaseMap.getObj<Mat>();
+    Mat &mask = *shadowMask.getObj<Mat>();
 
     int idx; //idx is used to store pixel position (idx = i*cols + j)
     bool valid;//tells if a pixel is in the valid mask region
@@ -711,7 +711,7 @@ void HistogramPhaseUnwrapping_Impl::unwrapHistogram()
 }
 void HistogramPhaseUnwrapping_Impl::addIncrement( OutputArray unwrappedPhaseMap )
 {
-    Mat &uPhaseMap = *(Mat*) unwrappedPhaseMap.getObj();
+    Mat &uPhaseMap = *unwrappedPhaseMap.getObj<Mat>();
     int rows = params.height;
     int cols = params.width;
     if( uPhaseMap.empty() )
@@ -766,7 +766,7 @@ void HistogramPhaseUnwrapping_Impl::getInverseReliabilityMap( OutputArray invers
 {
     int rows = params.height;
     int cols = params.width;
-    Mat &reliabilityMap_ = *(Mat*) inverseReliabilityMap.getObj();
+    Mat &reliabilityMap_ = *inverseReliabilityMap.getObj<Mat>();
     if( reliabilityMap_.empty() )
         reliabilityMap_.create(rows, cols, CV_32FC1);
     for( int i = 0; i < rows; ++i )

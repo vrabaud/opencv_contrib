@@ -158,7 +158,7 @@ Explanation
                     //extract the extra parameters
                 }
 
-                std::vector<Rect> & faces = *(std::vector<Rect>*)roi.getObj();
+                std::vector<Rect> & faces = *roi.getObj<std::vector<Rect>>();
                 faces.clear();
 
                 faceDetector(image.getMat(), faces, extra_params);

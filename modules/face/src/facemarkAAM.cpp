@@ -202,7 +202,7 @@ bool FacemarkAAMImpl::getData(void * items){
 
 bool FacemarkAAMImpl::addTrainingSample(InputArray image, InputArray landmarks){
     // FIXIT
-    std::vector<Point2f> & _landmarks = *(std::vector<Point2f>*)landmarks.getObj();
+    std::vector<Point2f> & _landmarks = *landmarks.getObj<std::vector<Point2f>>();
 
     images.push_back(image.getMat());
     facePoints.push_back(_landmarks);

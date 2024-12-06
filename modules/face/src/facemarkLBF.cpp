@@ -319,7 +319,7 @@ bool FacemarkLBFImpl::getData(void * items){
 
 bool FacemarkLBFImpl::addTrainingSample(InputArray image, InputArray landmarks){
     // FIXIT
-    std::vector<Point2f> & _landmarks = *(std::vector<Point2f>*)landmarks.getObj();
+    std::vector<Point2f> & _landmarks = *landmarks.getObj<std::vector<Point2f>>();
     prepareTrainingData(image.getMat(), _landmarks, data_faces, data_shapes, data_boxes);
     return true;
 }

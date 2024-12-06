@@ -122,7 +122,7 @@ namespace
             arrCopy(frame_, _frame);
         }
         else if (_frame.isUMat())
-            vc_ >> *(UMat *)_frame.getObj();
+            vc_ >> *_frame.getObj<UMat>();
         else
         {
             // should never get here

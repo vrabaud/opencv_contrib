@@ -47,7 +47,7 @@ namespace opencv_test { namespace {
 
 static bool customDetector( InputArray image, OutputArray ROIs, CascadeClassifier *face_detector){
     Mat gray;
-    std::vector<Rect> & faces = *(std::vector<Rect>*) ROIs.getObj();
+    std::vector<Rect> & faces = *ROIs.getObj<std::vector<Rect>>();
     faces.clear();
 
     if(image.channels()>1){
